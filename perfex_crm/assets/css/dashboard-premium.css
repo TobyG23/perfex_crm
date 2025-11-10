@@ -1,0 +1,421 @@
+/*
+ * Dashboard Premium Styles
+ * Modern, Attractive Dashboard Design
+ * Author: Claude
+ */
+
+/* ===========================
+   GLOBAL DASHBOARD STYLES
+   =========================== */
+#wrapper .content {
+    background: linear-gradient(180deg, #f5f5f5 0%, #fafafa 100%);
+    min-height: 100vh;
+}
+
+/* ===========================
+   WIDGET CONTAINER IMPROVEMENTS
+   =========================== */
+.widget {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    padding: 24px !important;
+    margin-bottom: 24px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e63946 0%, #c41e3a 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget:hover::before {
+    transform: scaleX(1);
+}
+
+.widget:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ===========================
+   TOP STATS CARDS - GLASSMORPHISM
+   =========================== */
+.top_stats_wrapper {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 1) 100%);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.1),
+        0 2px 6px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+}
+
+.top_stats_wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.03) 0%, rgba(196, 30, 58, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.top_stats_wrapper:hover::before {
+    opacity: 1;
+}
+
+.top_stats_wrapper:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon Styling */
+.top_stats_wrapper svg {
+    width: 28px !important;
+    height: 28px !important;
+    color: #e63946 !important;
+    filter: drop-shadow(0 2px 4px rgba(230, 57, 70, 0.3));
+    transition: all 0.3s ease;
+}
+
+.top_stats_wrapper:hover svg {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Text Styling */
+.top_stats_wrapper .tw-font-medium {
+    font-size: 0.95rem;
+    font-weight: 600 !important;
+    color: #1a1a1a !important;
+}
+
+.top_stats_wrapper .tw-font-semibold {
+    font-size: 1.1rem;
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===========================
+   PROGRESS BARS - ENHANCED
+   =========================== */
+.progress {
+    height: 8px !important;
+    border-radius: 10px !important;
+    background-color: rgba(230, 57, 70, 0.1) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: visible !important;
+}
+
+.progress-bar {
+    border-radius: 10px !important;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.progress-bar-danger {
+    background: linear-gradient(90deg, #e63946 0%, #c41e3a 100%) !important;
+}
+
+.progress-bar-success {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+.progress-bar-default {
+    background: linear-gradient(90deg, #6366f1 0%, #4f46e5 100%) !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+/* ===========================
+   PANEL IMPROVEMENTS
+   =========================== */
+.panel {
+    border-radius: 18px !important;
+    border: 1px solid rgba(230, 57, 70, 0.1) !important;
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.panel-heading {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%) !important;
+    color: white !important;
+    border-bottom: none !important;
+    padding: 18px 24px !important;
+    border-radius: 18px 18px 0 0 !important;
+}
+
+.panel-title {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+    letter-spacing: -0.3px;
+}
+
+.panel-body {
+    padding: 24px !important;
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* ===========================
+   DASHBOARD CARDS ANIMATION
+   =========================== */
+.quick-stats-invoices {
+    animation: slideUp 0.4s ease 0.1s backwards;
+}
+
+.quick-stats-leads {
+    animation: slideUp 0.4s ease 0.2s backwards;
+}
+
+.quick-stats-projects {
+    animation: slideUp 0.4s ease 0.3s backwards;
+}
+
+.quick-stats-tasks {
+    animation: slideUp 0.4s ease 0.4s backwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===========================
+   DASHBOARD OPTIONS BUTTON
+   =========================== */
+.screen-options-btn {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+    color: white !important;
+    border-radius: 50px !important;
+    padding: 12px 24px !important;
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none !important;
+}
+
+.screen-options-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(230, 57, 70, 0.45) !important;
+}
+
+.screen-options-btn svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* ===========================
+   TABLE IMPROVEMENTS
+   =========================== */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table > thead > tr > th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid #e63946 !important;
+    font-weight: 700 !important;
+    color: #1a1a1a;
+    padding: 16px !important;
+}
+
+.table > tbody > tr {
+    transition: all 0.3s ease;
+}
+
+.table > tbody > tr:hover {
+    background-color: rgba(230, 57, 70, 0.05);
+    transform: scale(1.01);
+}
+
+.table > tbody > tr > td {
+    padding: 14px !important;
+    vertical-align: middle !important;
+}
+
+/* ===========================
+   WIDGET DRAGGER
+   =========================== */
+.widget-dragger {
+    background: rgba(230, 57, 70, 0.1);
+    border-radius: 10px;
+    cursor: move;
+    padding: 8px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.widget-dragger:hover {
+    background: rgba(230, 57, 70, 0.2);
+}
+
+/* ===========================
+   RESPONSIVE IMPROVEMENTS
+   =========================== */
+@media (max-width: 768px) {
+    .widget {
+        padding: 18px !important;
+        border-radius: 16px !important;
+    }
+
+    .top_stats_wrapper {
+        padding: 18px;
+        margin-bottom: 16px;
+    }
+
+    .panel-heading {
+        padding: 14px 18px !important;
+    }
+
+    .panel-body {
+        padding: 18px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .top_stats_wrapper {
+        padding: 16px;
+    }
+
+    .top_stats_wrapper svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .top_stats_wrapper .tw-font-semibold {
+        font-size: 1rem;
+    }
+}
+
+/* ===========================
+   CHART CONTAINERS
+   =========================== */
+canvas {
+    border-radius: 12px;
+}
+
+/* ===========================
+   BADGES & LABELS
+   =========================== */
+.label {
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.label-danger {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+}
+
+.label-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.label-info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+/* ===========================
+   UTILITY CLASSES
+   =========================== */
+.mtop5 {
+    margin-top: 8px !important;
+}
+
+.tw-mb-2 {
+    margin-bottom: 16px !important;
+}
+
+/* ===========================
+   HOVER EFFECTS & TRANSITIONS
+   =========================== */
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ===========================
+   SCROLLBAR STYLING
+   =========================== */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #c41e3a 0%, #a01729 100%);
+}

@@ -1,0 +1,748 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+// ===== CORS HEADERS - MUST BE FIRST =====
+// Send CORS headers BEFORE anything else
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+    header('Access-Control-Max-Age: 86400');
+    http_response_code(200);
+    exit();
+}
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+/**
+ * API Controller for Mobile App
+ * Place this file in: application/controllers/api/Api.php
+ */
+class Api extends App_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+        
+        // Set JSON header
+        header('Content-Type: application/json');
+        
+        // Skip authentication for login endpoint
+        $request_uri = $_SERVER['REQUEST_URI'];
+        if (strpos($request_uri, '/api/login') === false) {
+            $this->authenticate();
+        }
+    }
+    
+    /**
+     * Authenticate API requests
+     */
+    private function authenticate()
+    {
+        $headers = $this->input->request_headers();
+        $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+        
+        if (!$token) {
+            $this->output_error('Unauthorized', 401);
+        }
+        
+        // Verify token - in this simple implementation, token = staffid
+        $this->db->where('staffid', $token);
+        $this->db->where('active', 1);
+        $staff = $this->db->get(db_prefix() . 'staff')->row();
+        
+        if (!$staff) {
+            $this->output_error('Invalid token', 401);
+        }
+        
+        // Set staff user for later use
+        $this->staff_id = $staff->staffid;
+        $this->staff_data = $staff;
+    }
+    
+    /**
+     * Output JSON response
+     */
+    private function output_json($data, $status = 200)
+    {
+        http_response_code($status);
+        echo json_encode($data);
+        exit();
+    }
+    
+    /**
+     * Output error response
+     */
+    private function output_error($message, $status = 400)
+    {
+        $this->output_json([
+            'success' => false,
+            'error' => $message
+        ], $status);
+    }
+    
+    /**
+     * LOGIN
+     * POST /api/login
+     */
+    public function login()
+    {
+        // Get JSON input
+        $json_input = file_get_contents('php://input');
+        $data = json_decode($json_input, true);
+        
+        $email = isset($data['email']) ? $data['email'] : $this->input->post('email');
+        $password = isset($data['password']) ? $data['password'] : $this->input->post('password');
+        
+        if (!$email || !$password) {
+            $this->output_error('Email and password are required');
+        }
+        
+        // Find staff by email
+        $this->db->where('email', $email);
+        $staff = $this->db->get(db_prefix() . 'staff')->row();
+        
+        if (!$staff) {
+            $this->output_error('Invalid credentials', 401);
+        }
+        
+        // Verify password - try multiple methods
+        $password_valid = false;
+        
+        // Method 1: password_verify (modern Perfex)
+        if (password_verify($password, $staff->password)) {
+            $password_valid = true;
+        }
+        
+        // Method 2: Try app_hasher (older Perfex)
+        if (!$password_valid && function_exists('app_hasher')) {
+            try {
+                if (app_hasher()->CheckPassword($password, $staff->password)) {
+                    $password_valid = true;
+                }
+            } catch (Exception $e) {
+                // Continue to next method
+            }
+        }
+        
+        // Method 3: MD5 (very old Perfex)
+        if (!$password_valid && md5($password) === $staff->password) {
+            $password_valid = true;
+        }
+        
+        if (!$password_valid) {
+            $this->output_error('Invalid credentials', 401);
+        }
+        
+        // Check if active
+        if ($staff->active != 1) {
+            $this->output_error('Account is inactive', 401);
+        }
+        
+        // Generate token
+        $token = $staff->staffid;
+        
+        $this->output_json([
+            'success' => true,
+            'data' => [
+                'token' => $token,
+                'user' => [
+                    'id' => $staff->staffid,
+                    'firstname' => $staff->firstname,
+                    'lastname' => $staff->lastname,
+                    'email' => $staff->email,
+                    'role' => $staff->role
+                ]
+            ]
+        ]);
+    }
+    
+    /**
+     * DASHBOARD STATS
+     * GET /api/dashboard
+     */
+    public function dashboard()
+    {
+        try {
+            // Basic stats
+            $data = [
+                'total_clients' => $this->db->count_all_results(db_prefix() . 'clients'),
+                'total_projects' => $this->db->count_all_results(db_prefix() . 'projects'),
+                'total_invoices' => $this->db->count_all_results(db_prefix() . 'invoices'),
+                'open_tickets' => $this->db->where('status', 1)->count_all_results(db_prefix() . 'tickets')
+            ];
+            
+            // Try to get recent projects
+            try {
+                $this->load->model('projects_model');
+                $data['recent_projects'] = $this->projects_model->get('', [
+                    'limit' => 5
+                ]);
+            } catch (Exception $e) {
+                $data['recent_projects'] = [];
+            }
+            
+            // Try to get recent tickets
+            try {
+                $this->load->model('tickets_model');
+                $data['recent_tickets'] = $this->db->order_by('ticketid', 'DESC')->limit(5)->get(db_prefix() . 'tickets')->result();
+            } catch (Exception $e) {
+                $data['recent_tickets'] = [];
+            }
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading dashboard: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET CLIENTS
+     * GET /api/clients
+     */
+    public function clients()
+    {
+        try {
+            $search = $this->input->get('search');
+            $limit = $this->input->get('limit') ?: 20;
+            $page = $this->input->get('page') ?: 1;
+            $offset = ($page - 1) * $limit;
+            
+            $this->db->select('*');
+            $this->db->from(db_prefix() . 'clients');
+            
+            if ($search) {
+                $this->db->like('company', $search);
+            }
+            
+            $this->db->limit($limit, $offset);
+            $clients = $this->db->get()->result();
+            
+            // Count total
+            $this->db->from(db_prefix() . 'clients');
+            if ($search) {
+                $this->db->like('company', $search);
+            }
+            $total = $this->db->count_all_results();
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $clients,
+                'pagination' => [
+                    'total' => $total,
+                    'page' => (int)$page,
+                    'limit' => (int)$limit,
+                    'pages' => ceil($total / $limit)
+                ]
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading clients: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET SINGLE CLIENT
+     * GET /api/clients/:id
+     */
+    public function client($id)
+    {
+        $this->load->model('clients_model');
+        
+        $client = $this->clients_model->get($id);
+        
+        if (!$client) {
+            $this->output_error('Client not found', 404);
+        }
+        
+        // Get additional data
+        $client->contacts = $this->clients_model->get_contacts($id);
+        $client->projects = $this->db->where('clientid', $id)->get(db_prefix() . 'projects')->result();
+        $client->invoices = $this->db->where('clientid', $id)->get(db_prefix() . 'invoices')->result();
+        
+        $this->output_json([
+            'success' => true,
+            'data' => $client
+        ]);
+    }
+    
+    /**
+     * GET TICKETS
+     * GET /api/tickets
+     */
+    public function tickets()
+    {
+        $this->load->model('tickets_model');
+        
+        $status = $this->input->get('status');
+        $limit = $this->input->get('limit') ?: 20;
+        $page = $this->input->get('page') ?: 1;
+        $offset = ($page - 1) * $limit;
+        
+        $where = [];
+        if ($status !== null) {
+            $where['status'] = $status;
+        }
+        
+        $tickets = $this->tickets_model->get('', [
+            'where' => $where,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
+        
+        $total = $this->db->where($where)->count_all_results(db_prefix() . 'tickets');
+        
+        $this->output_json([
+            'success' => true,
+            'data' => $tickets,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+                'pages' => ceil($total / $limit)
+            ]
+        ]);
+    }
+    
+    /**
+     * GET SINGLE TICKET
+     * GET /api/tickets/:id
+     */
+    public function ticket($id)
+    {
+        $this->load->model('tickets_model');
+        
+        $ticket = $this->tickets_model->get_ticket_by_id($id);
+        
+        if (!$ticket) {
+            $this->output_error('Ticket not found', 404);
+        }
+        
+        // Get ticket replies
+        $ticket->replies = $this->tickets_model->get_ticket_replies($id);
+        
+        $this->output_json([
+            'success' => true,
+            'data' => $ticket
+        ]);
+    }
+    
+    /**
+     * CREATE TICKET REPLY
+     * POST /api/tickets/:id/reply
+     */
+    public function ticket_reply($id)
+    {
+        $this->load->model('tickets_model');
+        
+        $json_input = file_get_contents('php://input');
+        $data = json_decode($json_input, true);
+        $message = isset($data['message']) ? $data['message'] : $this->input->post('message');
+        
+        if (!$message) {
+            $this->output_error('Message is required');
+        }
+        
+        $reply_data = [
+            'ticketid' => $id,
+            'userid' => $this->staff_id,
+            'message' => $message,
+            'date' => date('Y-m-d H:i:s')
+        ];
+        
+        $reply_id = $this->db->insert(db_prefix() . 'ticket_replies', $reply_data);
+        
+        if ($reply_id) {
+            $this->output_json([
+                'success' => true,
+                'data' => [
+                    'id' => $reply_id,
+                    'message' => 'Reply added successfully'
+                ]
+            ]);
+        } else {
+            $this->output_error('Failed to add reply', 500);
+        }
+    }
+    
+    /**
+     * GET INVOICES
+     * GET /api/invoices
+     */
+    public function invoices()
+    {
+        try {
+            $status = $this->input->get('status');
+            $limit = $this->input->get('limit') ?: 20;
+            $page = $this->input->get('page') ?: 1;
+            $offset = ($page - 1) * $limit;
+            
+            $this->db->select('*');
+            $this->db->from(db_prefix() . 'invoices');
+            
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            
+            $this->db->order_by('id', 'DESC');
+            $this->db->limit($limit, $offset);
+            $invoices = $this->db->get()->result();
+            
+            // Count total
+            $this->db->from(db_prefix() . 'invoices');
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            $total = $this->db->count_all_results();
+            
+            // Enrich invoice data
+            foreach ($invoices as $invoice) {
+                // Get client name
+                $client = $this->db->where('userid', $invoice->clientid)->get(db_prefix() . 'clients')->row();
+                $invoice->client_name = $client ? $client->company : 'N/A';
+                
+                // Get items
+                $invoice->items = $this->db->where('rel_id', $invoice->id)->where('rel_type', 'invoice')->get(db_prefix() . 'itemable')->result();
+            }
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $invoices,
+                'pagination' => [
+                    'total' => $total,
+                    'page' => (int)$page,
+                    'limit' => (int)$limit,
+                    'pages' => ceil($total / $limit)
+                ]
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading invoices: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET SINGLE INVOICE
+     * GET /api/invoices/:id
+     */
+    public function invoice($id)
+    {
+        try {
+            $invoice = $this->db->where('id', $id)->get(db_prefix() . 'invoices')->row();
+            
+            if (!$invoice) {
+                $this->output_error('Invoice not found', 404);
+            }
+            
+            // Get client
+            $invoice->client = $this->db->where('userid', $invoice->clientid)->get(db_prefix() . 'clients')->row();
+            
+            // Get items
+            $invoice->items = $this->db->where('rel_id', $id)->where('rel_type', 'invoice')->get(db_prefix() . 'itemable')->result();
+            
+            // Get payments
+            $invoice->payments = $this->db->where('invoiceid', $id)->get(db_prefix() . 'invoicepaymentrecords')->result();
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $invoice
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading invoice: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET TASKS
+     * GET /api/tasks
+     */
+    public function tasks()
+    {
+        try {
+            $status = $this->input->get('status');
+            $limit = $this->input->get('limit') ?: 20;
+            $page = $this->input->get('page') ?: 1;
+            $offset = ($page - 1) * $limit;
+            
+            $this->db->select('*');
+            $this->db->from(db_prefix() . 'tasks');
+            
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            
+            $this->db->order_by('id', 'DESC');
+            $this->db->limit($limit, $offset);
+            $tasks = $this->db->get()->result();
+            
+            // Count total
+            $this->db->from(db_prefix() . 'tasks');
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            $total = $this->db->count_all_results();
+            
+            // Enrich task data
+            foreach ($tasks as $task) {
+                // Get assignees
+                $task->assignees = $this->db->where('taskid', $task->id)->get(db_prefix() . 'task_assigned')->result();
+            }
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $tasks,
+                'pagination' => [
+                    'total' => $total,
+                    'page' => (int)$page,
+                    'limit' => (int)$limit,
+                    'pages' => ceil($total / $limit)
+                ]
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading tasks: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET SINGLE TASK
+     * GET /api/tasks/:id
+     */
+    public function task($id)
+    {
+        try {
+            $task = $this->db->where('id', $id)->get(db_prefix() . 'tasks')->row();
+            
+            if (!$task) {
+                $this->output_error('Task not found', 404);
+            }
+            
+            // Get assignees
+            $task->assignees = $this->db->where('taskid', $id)->get(db_prefix() . 'task_assigned')->result();
+            
+            // Get comments
+            $task->comments = $this->db->where('taskid', $id)->order_by('dateadded', 'DESC')->get(db_prefix() . 'task_comments')->result();
+            
+            // Get attachments
+            $task->attachments = $this->db->where('relid', $id)->where('rel_type', 'task')->get(db_prefix() . 'files')->result();
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $task
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading task: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET PROPOSALS
+     * GET /api/proposals
+     */
+    public function proposals()
+    {
+        try {
+            $status = $this->input->get('status');
+            $limit = $this->input->get('limit') ?: 20;
+            $page = $this->input->get('page') ?: 1;
+            $offset = ($page - 1) * $limit;
+            
+            $this->db->select('*');
+            $this->db->from(db_prefix() . 'proposals');
+            
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            
+            $this->db->order_by('id', 'DESC');
+            $this->db->limit($limit, $offset);
+            $proposals = $this->db->get()->result();
+            
+            // Count total
+            $this->db->from(db_prefix() . 'proposals');
+            if ($status !== null && $status !== '') {
+                $this->db->where('status', $status);
+            }
+            $total = $this->db->count_all_results();
+            
+            // Enrich proposal data
+            foreach ($proposals as $proposal) {
+                // Get client/lead name
+                if ($proposal->rel_type == 'customer') {
+                    $client = $this->db->where('userid', $proposal->rel_id)->get(db_prefix() . 'clients')->row();
+                    $proposal->client_name = $client ? $client->company : 'N/A';
+                } else {
+                    $proposal->client_name = 'Lead';
+                }
+            }
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $proposals,
+                'pagination' => [
+                    'total' => $total,
+                    'page' => (int)$page,
+                    'limit' => (int)$limit,
+                    'pages' => ceil($total / $limit)
+                ]
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading proposals: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET SINGLE PROPOSAL
+     * GET /api/proposals/:id
+     */
+    public function proposal($id)
+    {
+        try {
+            $proposal = $this->db->where('id', $id)->get(db_prefix() . 'proposals')->row();
+            
+            if (!$proposal) {
+                $this->output_error('Proposal not found', 404);
+            }
+            
+            // Get client info
+            if ($proposal->rel_type == 'customer') {
+                $proposal->client = $this->db->where('userid', $proposal->rel_id)->get(db_prefix() . 'clients')->row();
+            }
+            
+            // Get items
+            $proposal->items = $this->db->where('proposal_id', $id)->get(db_prefix() . 'proposal_items')->result();
+            
+            // Get comments
+            $proposal->comments = $this->db->where('rel_id', $id)->where('rel_type', 'proposal')->get(db_prefix() . 'proposal_comments')->result();
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $proposal
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading proposal: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET FILES/DESIGNS
+     * GET /api/files
+     */
+    public function files()
+    {
+        try {
+            $rel_type = $this->input->get('type'); // project, client, task, etc
+            $rel_id = $this->input->get('id');
+            $limit = $this->input->get('limit') ?: 50;
+            $page = $this->input->get('page') ?: 1;
+            $offset = ($page - 1) * $limit;
+            
+            $this->db->select('*');
+            $this->db->from(db_prefix() . 'files');
+            
+            if ($rel_type) {
+                $this->db->where('rel_type', $rel_type);
+            }
+            
+            if ($rel_id) {
+                $this->db->where('relid', $rel_id);
+            }
+            
+            $this->db->order_by('dateadded', 'DESC');
+            $this->db->limit($limit, $offset);
+            $files = $this->db->get()->result();
+            
+            // Count total
+            $this->db->from(db_prefix() . 'files');
+            if ($rel_type) {
+                $this->db->where('rel_type', $rel_type);
+            }
+            if ($rel_id) {
+                $this->db->where('relid', $rel_id);
+            }
+            $total = $this->db->count_all_results();
+            
+            // Add download URL
+            foreach ($files as $file) {
+                $file->download_url = base_url('download/file/' . $file->rel_type . '/' . $file->id);
+            }
+            
+            $this->output_json([
+                'success' => true,
+                'data' => $files,
+                'pagination' => [
+                    'total' => $total,
+                    'page' => (int)$page,
+                    'limit' => (int)$limit,
+                    'pages' => ceil($total / $limit)
+                ]
+            ]);
+        } catch (Exception $e) {
+            $this->output_error('Error loading files: ' . $e->getMessage(), 500);
+        }
+    }
+    
+    /**
+     * GET PROJECTS
+     * GET /api/projects
+     */
+    public function projects()
+    {
+        $this->load->model('projects_model');
+        
+        $status = $this->input->get('status');
+        $limit = $this->input->get('limit') ?: 20;
+        $page = $this->input->get('page') ?: 1;
+        $offset = ($page - 1) * $limit;
+        
+        $where = [];
+        if ($status !== null) {
+            $where['status'] = $status;
+        }
+        
+        $projects = $this->projects_model->get('', [
+            'where' => $where,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
+        
+        $total = $this->db->where($where)->count_all_results(db_prefix() . 'projects');
+        
+        $this->output_json([
+            'success' => true,
+            'data' => $projects,
+            'pagination' => [
+                'total' => $total,
+                'page' => $page,
+                'limit' => $limit,
+                'pages' => ceil($total / $limit)
+            ]
+        ]);
+    }
+    
+    /**
+     * GET SINGLE PROJECT
+     * GET /api/projects/:id
+     */
+    public function project($id)
+    {
+        $this->load->model('projects_model');
+        
+        $project = $this->projects_model->get($id);
+        
+        if (!$project) {
+            $this->output_error('Project not found', 404);
+        }
+        
+        // Get additional data
+        $project->tasks = $this->db->where('rel_id', $id)->where('rel_type', 'project')->get(db_prefix() . 'tasks')->result();
+        $project->members = $this->projects_model->get_project_members($id);
+        
+        $this->output_json([
+            'success' => true,
+            'data' => $project
+        ]);
+    }
+}

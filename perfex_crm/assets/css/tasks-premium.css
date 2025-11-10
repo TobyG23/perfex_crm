@@ -1,0 +1,562 @@
+/*
+ * Tasks Premium Styles
+ * Modern, Attractive Task Management Design
+ * Author: Claude
+ */
+
+/* ===========================
+   GLOBAL TASKS PAGE STYLES
+   =========================== */
+body.tasks-page #wrapper .content {
+    background: linear-gradient(180deg, #f5f5f5 0%, #fafafa 100%);
+    min-height: 100vh;
+}
+
+/* ===========================
+   HEADER & TITLE SECTION
+   =========================== */
+.tasks-page h4.tw-font-bold {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px !important;
+    letter-spacing: -0.5px;
+    animation: fadeInDown 0.6s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tasks-page .tw-mb-3 a {
+    color: #e63946 !important;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tasks-page .tw-mb-3 a:hover {
+    color: #c41e3a !important;
+    transform: translateX(4px);
+}
+
+/* ===========================
+   SUMMARY STATS - GLASSMORPHISM
+   =========================== */
+.tasks-page .tw-grid {
+    gap: 16px !important;
+}
+
+.tasks-page .tw-grid > div {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 1) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(230, 57, 70, 0.15) !important;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+    padding: 24px !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.tasks-page .tw-grid > div:nth-child(1) { animation: slideUp 0.5s ease 0.1s backwards; }
+.tasks-page .tw-grid > div:nth-child(2) { animation: slideUp 0.5s ease 0.2s backwards; }
+.tasks-page .tw-grid > div:nth-child(3) { animation: slideUp 0.5s ease 0.3s backwards; }
+.tasks-page .tw-grid > div:nth-child(4) { animation: slideUp 0.5s ease 0.4s backwards; }
+.tasks-page .tw-grid > div:nth-child(5) { animation: slideUp 0.5s ease 0.5s backwards; }
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tasks-page .tw-grid > div::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.03) 0%, rgba(196, 30, 58, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.tasks-page .tw-grid > div:hover::before {
+    opacity: 1;
+}
+
+.tasks-page .tw-grid > div:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(230, 57, 70, 0.3) !important;
+}
+
+/* Numbers with gradient */
+.tasks-page .tw-text-2xl {
+    font-size: 2rem !important;
+    font-weight: 900 !important;
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===========================
+   BUTTONS - PREMIUM STYLE
+   =========================== */
+.tasks-page .btn-primary {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 28px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    letter-spacing: 0.3px;
+}
+
+.tasks-page .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(230, 57, 70, 0.45) !important;
+}
+
+.tasks-page .btn-primary:active {
+    transform: translateY(-1px);
+}
+
+.tasks-page .btn-default {
+    border-radius: 14px !important;
+    border: 2px solid #e5e5e5 !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    background: white !important;
+}
+
+.tasks-page .btn-default:hover {
+    border-color: #e63946 !important;
+    color: #e63946 !important;
+    background: rgba(230, 57, 70, 0.05) !important;
+    transform: translateY(-2px);
+}
+
+/* Icon buttons */
+.tasks-page .btn i {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* ===========================
+   DATA TABLE - MODERN DESIGN
+   =========================== */
+.tasks-page .table-tasks {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+    background: white;
+}
+
+.tasks-page .table-tasks thead {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+}
+
+.tasks-page .table-tasks thead th {
+    color: white !important;
+    font-weight: 700 !important;
+    padding: 20px 18px !important;
+    border: none !important;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.tasks-page .table-tasks tbody tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tasks-page .table-tasks tbody tr:hover {
+    background: linear-gradient(90deg, rgba(230, 57, 70, 0.06) 0%, rgba(255, 255, 255, 1) 100%);
+    transform: scale(1.005);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.tasks-page .table-tasks tbody td {
+    padding: 18px !important;
+    vertical-align: middle !important;
+    font-size: 0.95rem;
+}
+
+/* ===========================
+   KANBAN BOARD - GLASSMORPHISM
+   =========================== */
+.tasks-page .kan-ban-tab {
+    border-radius: 20px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+}
+
+.tasks-page .kanban-container {
+    gap: 20px;
+}
+
+.tasks-page .kanban-container > div {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 1) 100%);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(230, 57, 70, 0.1);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.tasks-page .kanban-container > div:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Kanban column headers */
+.tasks-page .kanban-heading {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Kanban cards */
+.tasks-page .task-card,
+.tasks-page .kan-ban-content-wrapper {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.tasks-page .task-card:hover,
+.tasks-page .kan-ban-content-wrapper:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: rgba(230, 57, 70, 0.3);
+}
+
+/* ===========================
+   FILTERS SECTION
+   =========================== */
+.tasks-page .form-control {
+    border-radius: 12px !important;
+    border: 2px solid rgba(230, 57, 70, 0.1) !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+    background: white !important;
+}
+
+.tasks-page .form-control:focus {
+    border-color: #e63946 !important;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.1) !important;
+}
+
+.tasks-page .input-group-addon {
+    border-radius: 12px !important;
+    border: 2px solid rgba(230, 57, 70, 0.1) !important;
+    background: white !important;
+}
+
+/* ===========================
+   BADGES & STATUS LABELS
+   =========================== */
+.tasks-page .label {
+    border-radius: 10px !important;
+    padding: 6px 14px !important;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    letter-spacing: 0.3px;
+}
+
+.tasks-page .label-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+.tasks-page .label-danger {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+}
+
+.tasks-page .label-info {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+.tasks-page .label-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}
+
+.tasks-page .label-default {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+}
+
+/* ===========================
+   PANEL IMPROVEMENTS
+   =========================== */
+.tasks-page .panel {
+    border-radius: 20px !important;
+    border: 1px solid rgba(230, 57, 70, 0.1) !important;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden;
+    margin-bottom: 24px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.6s ease backwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tasks-page .panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.tasks-page .panel-heading {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 20px 24px !important;
+    border-radius: 20px 20px 0 0 !important;
+}
+
+.tasks-page .panel-title {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: white !important;
+    letter-spacing: -0.3px;
+}
+
+.tasks-page .panel-body {
+    padding: 24px !important;
+    background: rgba(255, 255, 255, 0.98);
+}
+
+/* ===========================
+   TASK STATUS COLORS
+   =========================== */
+.tasks-page .task-status-1 { border-left: 4px solid #10b981; }
+.tasks-page .task-status-2 { border-left: 4px solid #3b82f6; }
+.tasks-page .task-status-3 { border-left: 4px solid #6366f1; }
+.tasks-page .task-status-4 { border-left: 4px solid #10b981; }
+.tasks-page .task-status-5 { border-left: 4px solid #e63946; }
+
+/* ===========================
+   PAGINATION
+   =========================== */
+.tasks-page .pagination > li > a {
+    border-radius: 10px !important;
+    margin: 0 4px;
+    border: 2px solid #e5e5e5 !important;
+    color: #1a1a1a !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.tasks-page .pagination > li > a:hover {
+    background: #e63946 !important;
+    border-color: #e63946 !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.tasks-page .pagination > .active > a {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+    border-color: #e63946 !important;
+}
+
+/* ===========================
+   CHECKBOX & RADIO
+   =========================== */
+.tasks-page input[type="checkbox"],
+.tasks-page input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #e63946;
+}
+
+/* ===========================
+   MODAL IMPROVEMENTS
+   =========================== */
+.tasks-page .modal-content {
+    border-radius: 20px !important;
+    border: none !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+}
+
+.tasks-page .modal-header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%) !important;
+    color: white !important;
+    border-radius: 20px 20px 0 0 !important;
+    padding: 20px 24px !important;
+}
+
+.tasks-page .modal-title {
+    font-weight: 700 !important;
+    color: white !important;
+}
+
+/* ===========================
+   PROGRESS BARS
+   =========================== */
+.tasks-page .progress {
+    height: 10px !important;
+    border-radius: 10px !important;
+    background-color: rgba(230, 57, 70, 0.1) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.tasks-page .progress-bar {
+    background: linear-gradient(90deg, #e63946 0%, #c41e3a 100%) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.4);
+    transition: all 0.6s ease;
+}
+
+/* ===========================
+   TABS STYLING
+   =========================== */
+.tasks-page .nav-tabs {
+    border-bottom: 2px solid #e63946 !important;
+}
+
+.tasks-page .nav-tabs > li > a {
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease;
+}
+
+.tasks-page .nav-tabs > li.active > a {
+    background: linear-gradient(135deg, #e63946 0%, #c41e3a 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 768px) {
+    .tasks-page h4.tw-font-bold {
+        font-size: 1.5rem !important;
+    }
+
+    .tasks-page .tw-grid > div {
+        padding: 18px !important;
+    }
+
+    .tasks-page .tw-text-2xl {
+        font-size: 1.5rem !important;
+    }
+
+    .tasks-page .btn-primary {
+        padding: 12px 20px !important;
+    }
+
+    .tasks-page .table-tasks thead th {
+        padding: 16px 14px !important;
+        font-size: 0.8rem;
+    }
+
+    .tasks-page .table-tasks tbody td {
+        padding: 14px !important;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .tasks-page .tw-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .tasks-page .btn {
+        padding: 10px 16px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .tasks-page .kanban-container > div {
+        padding: 16px;
+    }
+}
+
+/* ===========================
+   LOADING & ANIMATIONS
+   =========================== */
+.tasks-page .loading-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ===========================
+   UTILITY CLASSES
+   =========================== */
+.tasks-page .tw-mb-6 {
+    margin-bottom: 32px !important;
+}
+
+.tasks-page ._buttons {
+    animation: fadeIn 0.8s ease 0.4s backwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

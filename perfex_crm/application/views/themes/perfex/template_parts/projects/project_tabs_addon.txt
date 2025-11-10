@@ -1,0 +1,10 @@
+
+            <?php if (isset($project->requires_design_approval) && $project->requires_design_approval == 1) { ?>
+            <li role="presentation" class="project_tab_designs">
+                <a data-group="project_designs"
+                    href="<?= site_url('clients/project/' . $project->id . '?group=project_designs'); ?>"
+                    role="tab">
+                    <i class="fa fa-file-image-o menu-icon" aria-hidden="true"></i>
+                    Diseños</a>
+            </li>
+            <?php } ?>

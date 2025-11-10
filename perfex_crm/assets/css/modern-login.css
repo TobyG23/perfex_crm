@@ -1,0 +1,502 @@
+/*
+ * Modern Login Styles - Inspired by Perfex Mobile App
+ * Design System with gradients, shadows, animations
+ */
+
+/* ===========================
+   CSS VARIABLES & COLORS
+   =========================== */
+:root {
+  --brand-primary: #e63946;
+  --brand-secondary: #c41e3a;
+  --dark-bg-start: #1a1a1a;
+  --dark-bg-end: #000000;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666;
+  --text-tertiary: #999;
+  --light-bg: #f8f9fa;
+  --white: #ffffff;
+}
+
+/* ===========================
+   BODY OVERRIDE FOR LOGIN PAGE
+   =========================== */
+body:has(.modern-login-wrapper) {
+  background: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* ===========================
+   MODERN LOGIN CONTAINER
+   =========================== */
+.modern-login-wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--dark-bg-start) 0%, var(--dark-bg-end) 100%) !important;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* Animated Background Waves */
+.login-wave {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 45%;
+  background: radial-gradient(circle, rgba(230, 57, 70, 0.15) 0%, transparent 70%);
+  animation: wave-animation 15s infinite linear;
+}
+
+.login-wave-1 {
+  top: -400px;
+  left: -400px;
+}
+
+.login-wave-2 {
+  bottom: -400px;
+  right: -400px;
+  animation-delay: -7.5s;
+  background: radial-gradient(circle, rgba(230, 57, 70, 0.2) 0%, transparent 70%);
+}
+
+@keyframes wave-animation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===========================
+   LOGIN CARD
+   =========================== */
+.modern-login-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 1px rgba(230, 57, 70, 0.2) inset,
+    0 -2px 0 rgba(230, 57, 70, 0.3) inset;
+  border-top: 3px solid var(--brand-primary);
+  animation: fadeInUp 0.6s ease backwards;
+  z-index: 10;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================
+   LOGO & HEADER SECTION
+   =========================== */
+.modern-login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.modern-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.modern-logo-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: fadeInDown 0.8s ease backwards, pulse 3s ease-in-out infinite;
+  animation-delay: 0s, 1s;
+}
+
+.modern-logo-image {
+  max-width: 180px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.modern-logo-circle {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.modern-logo-circle i {
+  font-size: 28px;
+  color: var(--white);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.modern-brand-name {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.modern-login-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  animation: fadeInDown 0.6s ease 0.2s backwards;
+}
+
+.modern-login-subheading {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0;
+  animation: fadeInDown 0.6s ease 0.3s backwards;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===========================
+   FORM ELEMENTS
+   =========================== */
+.modern-form-group {
+  margin-bottom: 20px;
+  position: relative;
+  animation: fadeInUp 0.6s ease backwards;
+}
+
+.modern-form-group:nth-child(1) { animation-delay: 0.4s; }
+.modern-form-group:nth-child(2) { animation-delay: 0.5s; }
+.modern-form-group:nth-child(3) { animation-delay: 0.6s; }
+.modern-form-group:nth-child(4) { animation-delay: 0.7s; }
+
+.modern-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.modern-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.modern-input-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--brand-primary);
+  font-size: 18px;
+  z-index: 2;
+}
+
+.modern-input {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--light-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Inter", sans-serif;
+}
+
+.modern-input:focus {
+  background: var(--white);
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+  transform: translateY(-1px);
+}
+
+.modern-input::placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* Select dropdown styling */
+.modern-select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--light-bg);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+}
+
+.modern-select:focus {
+  background: var(--white);
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.15);
+}
+
+/* ===========================
+   CHECKBOX STYLING
+   =========================== */
+.modern-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  animation: fadeInUp 0.6s ease 0.7s backwards;
+}
+
+.modern-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--brand-primary);
+}
+
+.modern-checkbox-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
+.modern-btn {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Inter", sans-serif;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.modern-btn-primary {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+  animation: fadeInUp 0.6s ease 0.8s backwards;
+}
+
+.modern-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
+}
+
+.modern-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.modern-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modern-btn-secondary {
+  background: var(--white);
+  color: var(--text-primary);
+  border: 2px solid #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.6s ease 0.9s backwards;
+}
+
+.modern-btn-secondary:hover {
+  background: var(--light-bg);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   LINKS & TEXT
+   =========================== */
+.modern-forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  animation: fadeInUp 0.6s ease 1s backwards;
+}
+
+.modern-forgot-link:hover {
+  color: var(--brand-primary);
+  text-decoration: none;
+}
+
+/* ===========================
+   ERROR & VALIDATION
+   =========================== */
+.modern-error {
+  color: var(--brand-primary);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 6px;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.modern-input.error {
+  border-color: var(--brand-primary);
+  background: rgba(230, 57, 70, 0.05);
+}
+
+/* ===========================
+   RECAPTCHA STYLING
+   =========================== */
+.modern-recaptcha-wrapper {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  animation: fadeInUp 0.6s ease 0.7s backwards;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 576px) {
+  .modern-login-card {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .modern-brand-name {
+    font-size: 28px;
+  }
+
+  .modern-login-heading {
+    font-size: 20px;
+  }
+
+  .modern-logo-image-wrapper {
+    padding: 10px;
+  }
+
+  .modern-logo-image {
+    max-width: 140px;
+    max-height: 60px;
+  }
+
+  .modern-logo-circle {
+    width: 50px;
+    height: 50px;
+  }
+
+  .modern-logo-circle i {
+    font-size: 24px;
+  }
+
+  .login-wave {
+    width: 600px;
+    height: 600px;
+  }
+}
+
+/* ===========================
+   UTILITY CLASSES
+   =========================== */
+.modern-text-center {
+  text-align: center;
+}
+
+.modern-mt-20 {
+  margin-top: 20px;
+}
+
+.modern-mb-20 {
+  margin-bottom: 20px;
+}
+
+/* ===========================
+   LOADING STATE
+   =========================== */
+.modern-btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.modern-btn-loading::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
