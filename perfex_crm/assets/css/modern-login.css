@@ -85,7 +85,7 @@ body:has(.modern-login-wrapper) {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
   border-radius: 24px;
-  padding: 32px 24px;
+  padding: 24px 24px 28px 24px; /* Reducir padding superior */
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
     0 0 1px rgba(230, 57, 70, 0.2) inset,
@@ -93,7 +93,6 @@ body:has(.modern-login-wrapper) {
   border-top: 3px solid var(--brand-primary);
   animation: fadeInUp 0.6s ease backwards;
   z-index: 10;
-  margin-top: 40px; /* Espacio adicional para el badge */
 }
 
 @keyframes fadeInUp {
@@ -112,7 +111,7 @@ body:has(.modern-login-wrapper) {
    =========================== */
 .modern-login-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .modern-logo-container {
@@ -120,7 +119,7 @@ body:has(.modern-login-wrapper) {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .modern-logo-image-wrapper {
@@ -208,7 +207,7 @@ body:has(.modern-login-wrapper) {
    FORM ELEMENTS
    =========================== */
 .modern-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   position: relative;
   animation: fadeInUp 0.6s ease backwards;
 }
@@ -508,20 +507,20 @@ body:has(.modern-login-wrapper) {
 
 /* Badge to indicate login type */
 .login-type-badge {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 24px;
+  display: inline-block;
+  margin: 0 auto 16px auto;
+  padding: 6px 20px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: fadeInDown 0.6s ease backwards;
-  z-index: 20;
   white-space: nowrap;
+  text-align: center;
+  width: fit-content;
+  display: block;
 }
 
 .login-type-badge.client-badge {
@@ -540,8 +539,8 @@ body:has(.modern-login-wrapper) {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 24px;
-  padding: 16px;
+  margin-bottom: 20px;
+  padding: 12px;
   background: var(--light-bg);
   border-radius: 16px;
   animation: fadeInUp 0.6s ease 0.3s backwards;
@@ -630,22 +629,23 @@ body:has(.modern-login-wrapper) {
 /* Responsive adjustments */
 @media (max-width: 576px) {
   .modern-login-card {
-    margin-top: 30px; /* Menos margen en móvil */
+    padding: 20px 18px 24px 18px;
   }
 
   .login-type-badge {
-    font-size: 11px;
-    padding: 6px 20px;
-    top: -18px;
+    font-size: 10px;
+    padding: 5px 16px;
+    margin-bottom: 12px;
   }
 
   .login-type-switch-container {
-    padding: 12px;
-    gap: 10px;
+    padding: 10px;
+    gap: 8px;
+    margin-bottom: 16px;
   }
 
   .login-type-label {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .login-type-switch {
@@ -660,5 +660,17 @@ body:has(.modern-login-wrapper) {
 
   .login-type-switch.staff-active .login-type-switch-slider {
     transform: translateX(28px);
+  }
+
+  .modern-login-header {
+    margin-bottom: 20px;
+  }
+
+  .modern-logo-container {
+    margin-bottom: 12px;
+  }
+
+  .modern-form-group {
+    margin-bottom: 14px;
   }
 }
