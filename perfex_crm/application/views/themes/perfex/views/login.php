@@ -8,6 +8,22 @@
 
     <!-- Modern Login Card -->
     <div class="modern-login-card">
+        <!-- Login Type Badge -->
+        <div class="login-type-badge client-badge">
+            <i class="fa fa-user"></i> Cliente
+        </div>
+
+        <!-- Login Type Switch -->
+        <div class="login-type-switch-container">
+            <span class="login-type-label active" id="client-label">Cliente</span>
+            <div class="login-type-switch client-active" id="login-type-toggle">
+                <div class="login-type-switch-slider"></div>
+                <i class="fa fa-user login-type-switch-icon client-icon"></i>
+                <i class="fa fa-briefcase login-type-switch-icon staff-icon"></i>
+            </div>
+            <span class="login-type-label" id="staff-label">Staff</span>
+        </div>
+
         <!-- Header Section with Logo -->
         <div class="modern-login-header">
             <div class="modern-logo-container">
@@ -138,6 +154,28 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', function() {
             submitBtn.classList.add('modern-btn-loading');
             submitBtn.disabled = true;
+        });
+    }
+
+    // Login Type Switch Handler
+    const toggle = document.getElementById('login-type-toggle');
+    const clientLabel = document.getElementById('client-label');
+    const staffLabel = document.getElementById('staff-label');
+
+    if (toggle) {
+        toggle.addEventListener('click', function() {
+            // Toggle to Staff login
+            if (toggle.classList.contains('client-active')) {
+                // Redirect to staff login with smooth transition
+                window.location.href = '<?= admin_url('authentication'); ?>';
+            }
+        });
+    }
+
+    // Label click handlers
+    if (staffLabel) {
+        staffLabel.addEventListener('click', function() {
+            window.location.href = '<?= admin_url('authentication'); ?>';
         });
     }
 });

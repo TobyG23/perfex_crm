@@ -11,6 +11,22 @@
 
         <!-- Modern Login Card -->
         <div class="modern-login-card">
+            <!-- Login Type Badge -->
+            <div class="login-type-badge staff-badge">
+                <i class="fa fa-briefcase"></i> Staff
+            </div>
+
+            <!-- Login Type Switch -->
+            <div class="login-type-switch-container">
+                <span class="login-type-label" id="client-label">Cliente</span>
+                <div class="login-type-switch staff-active" id="login-type-toggle">
+                    <div class="login-type-switch-slider"></div>
+                    <i class="fa fa-user login-type-switch-icon client-icon"></i>
+                    <i class="fa fa-briefcase login-type-switch-icon staff-icon"></i>
+                </div>
+                <span class="login-type-label active" id="staff-label">Staff</span>
+            </div>
+
             <!-- Header Section with Logo -->
             <div class="modern-login-header">
                 <div class="modern-logo-container">
@@ -110,6 +126,28 @@
             form.addEventListener('submit', function() {
                 submitBtn.classList.add('modern-btn-loading');
                 submitBtn.disabled = true;
+            });
+        }
+
+        // Login Type Switch Handler
+        const toggle = document.getElementById('login-type-toggle');
+        const clientLabel = document.getElementById('client-label');
+        const staffLabel = document.getElementById('staff-label');
+
+        if (toggle) {
+            toggle.addEventListener('click', function() {
+                // Toggle to Client login
+                if (toggle.classList.contains('staff-active')) {
+                    // Redirect to client login with smooth transition
+                    window.location.href = '<?= site_url('authentication/login'); ?>';
+                }
+            });
+        }
+
+        // Label click handlers
+        if (clientLabel) {
+            clientLabel.addEventListener('click', function() {
+                window.location.href = '<?= site_url('authentication/login'); ?>';
             });
         }
     });
