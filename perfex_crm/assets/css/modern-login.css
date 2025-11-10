@@ -93,6 +93,7 @@ body:has(.modern-login-wrapper) {
   border-top: 3px solid var(--brand-primary);
   animation: fadeInUp 0.6s ease backwards;
   z-index: 10;
+  margin-top: 40px; /* Espacio adicional para el badge */
 }
 
 @keyframes fadeInUp {
@@ -508,7 +509,7 @@ body:has(.modern-login-wrapper) {
 /* Badge to indicate login type */
 .login-type-badge {
   position: absolute;
-  top: -16px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   padding: 8px 24px;
@@ -520,6 +521,7 @@ body:has(.modern-login-wrapper) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: fadeInDown 0.6s ease backwards;
   z-index: 20;
+  white-space: nowrap;
 }
 
 .login-type-badge.client-badge {
@@ -627,9 +629,14 @@ body:has(.modern-login-wrapper) {
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
+  .modern-login-card {
+    margin-top: 30px; /* Menos margen en móvil */
+  }
+
   .login-type-badge {
     font-size: 11px;
     padding: 6px 20px;
+    top: -18px;
   }
 
   .login-type-switch-container {
